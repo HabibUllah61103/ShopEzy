@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'ShopEzy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'storedb',
+        'USER': 'root',
+        'PASSWORD': 'rootadmin',
+        'HOST': 'localhost',  # Set to the MySQL server host (usually 'localhost')
+        'PORT': '3306', 
     }
 }
 
