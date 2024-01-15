@@ -11,7 +11,7 @@ def customer_signup(request):
 def customer_signin(request):
     return render(request, 'customer_signin.html')
 
-def customer_profile(request):
+def customer_profile(request):  
     return render(request, 'customer_profile.html')
 
 def product_view(request):
