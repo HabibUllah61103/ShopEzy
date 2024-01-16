@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignupForm
-
 # Create your views here.
 
 def index(request):
