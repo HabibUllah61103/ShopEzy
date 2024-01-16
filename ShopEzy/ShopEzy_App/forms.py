@@ -21,14 +21,20 @@ class SignupForm(forms.Form):
 
     def clean_cpassword(self):
         cpassword = self.cleaned_data.get('cpassword')
-        cre_password = self.cleaned_data.get('cre_password')
 
         if len(cpassword) < 8:
             raise ValidationError("Password must be at least 8 characters long")
-
-        if cpassword != cre_password:
-            raise ValidationError("Passwords do not match")
         return cpassword
+    
+    def clean_cre_password(self):
+        cre_password = self.cleaned_data.get('cre_password')
+        password = self.cleaned_data.get('cpassword')
+
+        if cre_password != password:
+            raise ValidationError("Passwords do not match")
+        return cre_password
+
+    
     
     def save(self):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
