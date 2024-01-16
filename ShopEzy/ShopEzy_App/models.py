@@ -290,7 +290,7 @@ class Products(models.Model):
     pprice = models.DecimalField(db_column='PPrice', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
     pquantity = models.IntegerField(db_column='PQuantity', blank=True, null=True)  # Field name made lowercase.
     pspecs = models.TextField(db_column='PSpecs', blank=True, null=True)  # Field name made lowercase.
-    pimage = models.CharField(db_column='PImage', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    pimage = models.ImageField(db_column='PImage', max_length=200, blank=True, null=True, upload_to="product_image")  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='CreatedAt', blank=True, null=True)  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='UpdatedAt', blank=True, null=True)  # Field name made lowercase.
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
