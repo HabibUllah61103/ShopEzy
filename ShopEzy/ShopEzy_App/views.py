@@ -113,8 +113,48 @@ def product_view(request):
     }
     return render(request, 'product_view.html', context)
 
-def product_detail(request):
-    return render(request, 'product_detail.html')
+def product_detail(request, category_name):
+    if category_name == 'category_electronics':
+        electronics = Electronics.objects.all()
+        electronic_ids = [electronic.prodid.prodid for electronic in electronics]
+        electronics_prod =[Products.objects.get(prodid=str(id)) for id in electronic_ids]
+        for item in electronics_prod:
+            path = 'media/' + str(item.pspecs)
+            with open(path, 'r') as file:
+                file_contents = file.read()
+            item.pspecs = file_contents
+        context = {
+        'products': electronics_prod,
+        }
+        return render(request, 'product_detail.html', context=context)
+    
+    elif category_name == 'category_garments':
+        garments = Garments.objects.all()
+        garment_ids = [garment.prodid.prodid for garment in garments]
+        garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
+        for item in garments_prod:
+            path = 'media/' + str(item.pspecs)
+            with open(path, 'r') as file:
+                file_contents = file.read()
+            item.pspecs = file_contents
+        context = {
+        'products': garments_prod,
+        }
+        return render(request, 'product_detail.html', context=context)
+    
+    else:
+        groceries = Groceries.objects.all()
+        grocery_ids = [grocery.prodid.prodid for grocery in groceries]
+        groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
+        for item in groceries_prod:
+            path = 'media/' + str(item.pspecs)
+            with open(path, 'r') as file:
+                file_contents = file.read()
+            item.pspecs = file_contents
+        context = {
+        'products': groceries_prod,
+        }
+        return render(request, 'product_detail.html', context=context)
 
 def order_confirmation(request):
     return render(request, 'order_confirmation.html')
