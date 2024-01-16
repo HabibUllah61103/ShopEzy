@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
-=======
-from django.shortcuts import redirect, render
-from .models import Electronics, Garments, Groceries, Products
-from .forms import SignupForm
->>>>>>> 00770aa600435a344ac804a2bf00399df9f04e6f
+from .forms import LoginForm, SignupForm
+
 # Create your views here.
 
 def index(request):

@@ -1,15 +1,11 @@
-<<<<<<< HEAD
 from django import forms  
-from django.forms.fields import EmailField  
-from django.forms.forms import Form  
+from .models import Customers
+from django.core.exceptions import ValidationError
+
   
 class LoginForm(forms.Form):
     cemail = forms.EmailField(required=True, max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Your Email'}))
     cpassword = forms.CharField(max_length=100, min_length=8, widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), required=True)
-=======
-from django import forms
-from .models import Customers
-from django.core.exceptions import ValidationError
 
 class SignupForm(forms.Form): 
     cname = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Your Name'}))
@@ -39,4 +35,3 @@ class SignupForm(forms.Form):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
         return customer
     
->>>>>>> 00770aa600435a344ac804a2bf00399df9f04e6f
