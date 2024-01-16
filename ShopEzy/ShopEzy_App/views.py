@@ -99,6 +99,12 @@ def product_view(request):
     garments_prod = [Products.objects.get(prodid=str(id)) for id in sorted_garment_prod_id.keys()]
     groceries_prod = [Products.objects.get(prodid=str(id)) for id in sorted_grocery_prod_id.keys()]
 
+    for item in electronics_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
 
     context = {
         'electronics': electronics_prod,
