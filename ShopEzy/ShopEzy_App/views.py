@@ -1,55 +1,26 @@
 from django.shortcuts import render
-from .models import Electronics, Products, Garments, Groceries
+from .models import Electronics, Garments, Groceries, Products
 # Create your views here.
 
 def index(request):
+    electronics = Electronics.objects.all()
+    garments = Garments.objects.all()
+    groceries = Groceries.objects.all()
 
-    electronics = Electronics.objects.all()[:4]
-    garments = Garments.objects.all()[:4]
-    groceries = Groceries.objects.all()[:4]
+    electronic_ids = [electronic.prodid.prodid for electronic in electronics]
+    garment_ids = [garment.prodid.prodid for garment in garments]
+    grocery_ids = [grocery.prodid.prodid for grocery in groceries]
 
-    electronics_items_ids = [electronic.prodid.prodid for electronic in electronics]
-    garments_items_ids = [garment.prodid.prodid for garment in garments]
-    groceries_items_ids = [grocery.prodid.prodid for grocery in groceries]
+    electronics_prod =[Products.objects.get(prodid=str(id)) for id in electronic_ids]
+    garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
+    groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    electronics_items = [Products.objects.get(prodid=id) for id in electronics_items_ids]
-    garments_items = [Products.objects.get(prodid=id) for id in garments_items_ids]
-    groceries_items = [Products.objects.get(prodid=id) for id in groceries_items_ids]
-
-    for item in electronics_items:
-        '''
-        path = 'media/' + str(item.pspecs)
-        with open(path, 'r') as file:
-            file_contents = file.read()
-        item.pspecs = file_contents
-        '''
-        item.pimage = item.pimage.decode('utf-8')
-        
-
-    for item in garments_items:
-        '''
-        path = 'media/' + str(item.pspecs)
-        with open(path, 'r') as file:
-            file_contents = file.read()
-        item.pspecs = file_contents
-        '''
-        item.pimage = item.pimage.decode('utf-8')
-
-    for item in groceries_items:
-        '''
-        path = 'media/' + str(item.pspecs)
-        with open(path, 'r') as file:
-            file_contents = file.read()
-        item.pspecs = file_contents
-        '''
-        item.pimage = item.pimage.decode('utf-8')
-
-    context={'electronics_items': electronics_items,
-             'garments_items': garments_items,
-             'groceries_items': groceries_items,
+    context = {
+        'electronics': electronics_prod,
+        'garments': garments_prod,
+        'groceries': groceries_prod,
     }
     return render(request, 'index.html', context)
-
 
 def customer_signup(request):
     return render(request, 'customer_signup.html')
