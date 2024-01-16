@@ -1,9 +1,26 @@
 from django.shortcuts import render
-# from models import customers
+from .models import Electronics, Garments, Groceries, Products
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    electronics = Electronics.objects.all()
+    garments = Garments.objects.all()
+    groceries = Groceries.objects.all()
+
+    electronic_ids = [electronic.prodid.prodid for electronic in electronics]
+    garment_ids = [garment.prodid.prodid for garment in garments]
+    grocery_ids = [grocery.prodid.prodid for grocery in groceries]
+
+    electronics_prod =[Products.objects.get(prodid=str(id)) for id in electronic_ids]
+    garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
+    groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
+
+    context = {
+        'electronics': electronics_prod,
+        'garments': garments_prod,
+        'groceries': groceries_prod,
+    }
+    return render(request, 'index.html', context)
 
 def customer_signup(request):
     return render(request, 'customer_signup.html')
