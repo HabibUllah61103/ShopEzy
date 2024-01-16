@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignupForm
+from .forms import SigninForm, SignupForm
 # Create your views here.
 
 def index(request):
@@ -47,7 +47,7 @@ def customer_signup(request):
 
 def customer_signin(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = SigninForm(request.POST)
         if form.is_valid():
             cemail = form.cleaned_data['cemail']
             cpassword = form.cleaned_data['cpassword']
@@ -59,7 +59,7 @@ def customer_signin(request):
             else:
                 return render(request, 'customer_signin.html', {'form': form})
     else:
-        form = LoginForm()
+        form = SigninForm()
     return render(request, 'customer_signin.html', {'form': form})
 
 def customer_profile(request):
