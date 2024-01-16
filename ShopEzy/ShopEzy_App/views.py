@@ -62,7 +62,7 @@ def customer_signin(request):
     return render(request, 'customer_signin.html', {'form': form})
 
 def customer_profile(request):
-    return render(request, 'customer_profile.html', context)
+    return render(request, 'customer_profile.html')
 
 
 def product_view(request):
