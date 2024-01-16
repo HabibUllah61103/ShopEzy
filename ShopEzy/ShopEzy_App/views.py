@@ -99,17 +99,7 @@ def product_view(request):
     garments_prod = [Products.objects.get(prodid=str(id)) for id in sorted_garment_prod_id.keys()]
     groceries_prod = [Products.objects.get(prodid=str(id)) for id in sorted_grocery_prod_id.keys()]
 
-    print(sorted_garment_prod_id)
-    print(sorted_electronic_prod_id)
-    print(sorted_grocery_prod_id)
-    
-    for items in electronics_prod:
-        print(items.prodid)
-    for items in garments_prod:
-        print(items.prodid)
-    for items in groceries_prod:
-        print(items.prodid)
-    
+
     context = {
         'electronics': electronics_prod,
         'garments': garments_prod,
