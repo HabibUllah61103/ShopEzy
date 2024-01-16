@@ -31,3 +31,6 @@ class SignupForm(forms.Form):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
         return customer
     
+def Product_view(request):
+    return render(request, 'product_view.html')
+    

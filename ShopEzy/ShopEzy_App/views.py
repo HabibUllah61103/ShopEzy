@@ -63,7 +63,29 @@ def customer_signin(request):
     return render(request, 'customer_signin.html', {'form': form})
 
 def customer_profile(request):
-    return render(request, 'customer_profile.html')
+    electronics = Electronics.objects.all()
+    garments = Garments.objects.all()
+    groceries = Groceries.objects.all()
+
+    electronic_ids = [(electronic.prodid.prodid, electronic.rating.rating) for electronic in electronics]
+    garment_ids = [(garment.prodid.prodid, garment.rating.rating) for garment in garments]
+    grocery_ids = [(grocery.prodid.prodid, grocery.rating.rating) for grocery in groceries]
+
+    sorted_electronic_ids = sorted(electronic_ids, key=lambda x: x[1])
+    sorted_garment_ids = sorted(garment_ids, key=lambda x: x[1])
+    sorted_grocery_ids = sorted(grocery_ids, key=lambda x: x[1])
+
+    electronics_prod =[Products.objects.get(prodid=str(id)) for id in sorted_electronic_ids]
+    garments_prod =[Products.objects.get(prodid=str(id)) for id in sorted_garment_ids]
+    groceries_prod =[Products.objects.get(prodid=str(id)) for id in sorted_grocery_ids]
+
+    context = {
+        'electronics': electronics_prod,
+        'garments': garments_prod,
+        'groceries': groceries_prod,
+    }
+
+    return render(request, 'customer_profile.html', context)
 
 def product_view(request):
     return render(request, 'product_view.html')
