@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
+from django.contrib.auth import authenticate, login
+from .forms import LoginForm
 # Create your views here.
 
 def index(request):
@@ -34,7 +36,21 @@ def customer_signup(request):
     return render(request, 'customer_signup.html')
 
 def customer_signin(request):
-    return render(request, 'customer_signin.html')
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cemail = form.cleaned_data['cemail']
+            cpassword = form.cleaned_data['cpassword']
+            user = authenticate(request, cemail=cemail, cpassword=cpassword)
+            if user is not None:
+                login(request, user)
+                print(request.user.custid)
+                return redirect('product_view')           
+            else:
+                return render(request, 'customer_signin.html', {'form': form})
+    else:
+        form = LoginForm()
+    return render(request, 'customer_signin.html', {'form': form})
 
 def customer_profile(request):
     return render(request, 'customer_profile.html')
