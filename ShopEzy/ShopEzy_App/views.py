@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
+=======
+from django.shortcuts import redirect, render
+from .models import Electronics, Garments, Groceries, Products
+from .forms import SignupForm
+>>>>>>> 00770aa600435a344ac804a2bf00399df9f04e6f
 # Create your views here.
 
 def index(request):
@@ -17,12 +23,12 @@ def index(request):
     garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
     groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    for item in electronics_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in garments_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in groceries_prod:
-        item.pimage = item.pimage.decode('utf-8')
+    # for item in electronics_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in garments_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in groceries_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -33,7 +39,17 @@ def index(request):
     return render(request, 'index.html', context)
 
 def customer_signup(request):
-    return render(request, 'customer_signup.html')
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('customer_signin')
+    else:
+        form = SignupForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'customer_signup.html', context=context)
 
 def customer_signin(request):
     if request.method == 'POST':
