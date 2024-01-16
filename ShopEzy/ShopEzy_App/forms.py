@@ -22,6 +22,8 @@ class SignupForm(forms.Form):
     def clean_cpassword(self):
         cpassword = self.cleaned_data.get('cpassword')
         cre_password = self.cleaned_data.get('cre_password')
+        print(cpassword)
+        print(cre_password)
 
         if len(cpassword) < 8:
             raise ValidationError("Password must be at least 8 characters long")

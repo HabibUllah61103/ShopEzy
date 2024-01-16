@@ -17,12 +17,12 @@ def index(request):
     garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
     groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    # for item in electronics_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in garments_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in groceries_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
+    for item in electronics_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -36,6 +36,11 @@ def customer_signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
+            cpassword = form.cleaned_data['cpassword']
+            cre_password = form.cleaned_data['cre_password']
+            print(cpassword)
+            print(cre_password)
+            
             form.save()
             return redirect('customer_signin')
     else:
