@@ -33,8 +33,8 @@ class SignupForm(forms.Form):
         if cre_password != password:
             raise ValidationError("Passwords do not match")
         return cre_password
-
     
+
     
     def save(self):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
