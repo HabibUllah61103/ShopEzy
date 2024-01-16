@@ -299,7 +299,7 @@ class Products(models.Model):
     persons_rated = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'products'
 
 
