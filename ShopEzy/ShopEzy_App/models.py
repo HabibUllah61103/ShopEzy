@@ -295,6 +295,8 @@ class Products(models.Model):
     createdat = models.DateTimeField(db_column='CreatedAt', blank=True, null=True)  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='UpdatedAt', blank=True, null=True)  # Field name made lowercase.
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
+    rating = models.DecimalField(blank=True, null=True, max_digits=2, decimal_places=1)
+    persons_rated = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

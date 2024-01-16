@@ -9,8 +9,8 @@ class SigninForm(forms.Form):
 class SignupForm(forms.Form): 
     cname = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Your Name'}))
     cemail = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Your Email'}))
-    cpassword = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), min_length=8)
-    cre_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Repeat your password'}))
+    cpassword = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+    cre_password = forms.CharField( widget=forms.PasswordInput(attrs={'placeholder': 'Repeat your password'}))
 
     def clean_cemail(self):
         cemail = self.cleaned_data.get('cemail').lower()
@@ -18,15 +18,7 @@ class SignupForm(forms.Form):
         if new.exists():
             raise ValidationError("Email Already Exists")
         return cemail
-
-    '''
-    def clean_cpassword(self):
-        cpassword = self.cleaned_data.get('cpassword')
-
-        if len(cpassword) < 8:
-            raise ValidationError("Password must be at least 8 characters long")
-        return cpassword
-    '''
+    
     def clean_cre_password(self):
         cre_password = self.cleaned_data.get('cre_password')
         password = self.cleaned_data.get('cpassword')
@@ -34,8 +26,6 @@ class SignupForm(forms.Form):
         if cre_password != password:
             raise ValidationError("Passwords do not match")
         return cre_password
-    
-
     
     def save(self):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
