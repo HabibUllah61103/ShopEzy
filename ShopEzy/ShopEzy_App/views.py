@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
-from django.shortcuts import redirect, render
-from .models import Electronics, Garments, Groceries, Products
 from .forms import SignupForm
 # Create your views here.
 
