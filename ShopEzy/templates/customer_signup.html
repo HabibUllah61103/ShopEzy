@@ -29,36 +29,37 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                {{ form.name }}
+                                {{ form.cname }}
                             </div>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                {{ form.email }}
+                                {{ form.cemail }}
                             </div>
                             <div class="form-group">
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                {{ form.password }}
+                                {{ form.cpassword }}
                             </div>
                             <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                {{ form.re_password }}
-                            </div>
-                            <div class="form-group">
-                                {% for error in form.name.errors %}
-                                    <span class="error" style="color: red;">{{ error }}</span>
+                                {{ form.cre_password }}
+                            </div class="form-group">
+                            <div>
+                                {% for error in form.cname.errors %}
+                                    <div class="error" style="color: red;">{{ error }}</div>
                                 {% endfor %}
 
-                                {% for error in form.email.errors %}
-                                    <span class="error" style="color: red;">{{ error }}</span>
+                                {% for error in form.cemail.errors %}
+                                    <div class="error" style="color: red;">{{ error }}</div>
                                 {% endfor %}
 
-                                {% for error in form.password.errors %}
-                                    <span class="error" style="color: red;">{{ error }}</span>
+                                {% for error in form.cre_password.errors %}
+                                    <div class="error" style="color: red;">{{ error }}</div>
                                 {% endfor %}
 
-                                {% for error in form.re_password.errors %}
-                                    <span class="error" style="color: red;">{{ error }}</span>
+                                {% for error in form.cpassword.errors %}
+                                    <div class="error" style="color: red;">{{ error }}</div>
                                 {% endfor %}
+
 
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all
@@ -71,7 +72,7 @@
                     </div>
                     <div class="signup-image">
                         <figure><img src="images/signup-image.jpg" alt="sing up image"></figure>
-                        <a href="#" class="signup-image-link">I am already member</a>
+                        <a href="customer_signin" class="signup-image-link">I am already member</a>
                     </div>
                 </div>
             </div>
