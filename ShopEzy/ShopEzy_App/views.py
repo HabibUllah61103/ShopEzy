@@ -64,7 +64,6 @@ def customer_signin(request):
 def customer_profile(request):
     return render(request, 'customer_profile.html')
 
-
 def product_view(request):
     electronics = Electronics.objects.all()
     garments = Garments.objects.all()
