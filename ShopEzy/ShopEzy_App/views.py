@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Electronics, Garments, Groceries, Products, Shoppingcarts, Customers, Cartcontainers
 from django.contrib.auth import authenticate, login
 from .forms import SigninForm, SignupForm
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 # Create your views here.
 
 def index(request):
@@ -17,12 +18,12 @@ def index(request):
     garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
     groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    # for item in electronics_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in garments_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in groceries_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
+    for item in electronics_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -36,6 +37,11 @@ def customer_signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
+            cpassword = form.cleaned_data['cpassword']
+            cre_password = form.cleaned_data['cre_password']
+            print(cpassword)
+            print(cre_password)
+            
             form.save()
             return redirect('customer_signin')
     else:
@@ -44,6 +50,7 @@ def customer_signup(request):
         'form': form
     }
     return render(request, 'customer_signup.html', context=context)
+
 
 def customer_signin(request):
     if request.method == 'POST':
@@ -57,6 +64,7 @@ def customer_signin(request):
                 customer_id= request.user.custid
                 return redirect('product_view', customer_id=customer_id)           
             else:
+                form.add_error(None, 'Invalid email or password')
                 return render(request, 'customer_signin.html', {'form': form})
     else:
         form = SigninForm()
@@ -95,6 +103,14 @@ def product_view(request, customer_id):
     garments_prod = [Products.objects.get(prodid=str(id)) for id in sorted_garment_prod_id.keys()]
     groceries_prod = [Products.objects.get(prodid=str(id)) for id in sorted_grocery_prod_id.keys()]
 
+    for item in electronics_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
+
+
     context = {
         'electronics': electronics_prod,
         'garments': garments_prod,
@@ -104,8 +120,16 @@ def product_view(request, customer_id):
     return render(request, 'product_view.html', context)
 
 def product_detail(request, category_name, customer_id):
-    customer_id = int(customer_id)
+
     if request.method == 'POST':
+        product_id = request.POST.get('prodid')
+        product_object = Products.objects.get(prodid=product_id)        
+        customer_object = Customers.objects.get(custid=customer_id)
+        shoppingcart_object = Shoppingcarts.objects.create(custid=customer_object)
+        cartcontainer_object = Cartcontainers.objects.create(cartid=shoppingcart_object, prodid=product_object)
+        return redirect('product_detail', category_name=category_name, customer_id=customer_id)
+
+        '''
         product_id = request.POST.get('prodid')
         customer_instance = get_object_or_404(Customers, custid=customer_id)
         product_instance = get_object_or_404(Products, prodid=int(product_id))
@@ -127,6 +151,7 @@ def product_detail(request, category_name, customer_id):
                 Cartcontainers.objects.create(prodid=product_instance, cartid=shoppingcart_instance)
 
         return redirect('product_detail', category_name=category_name, customer_id=customer_id)
+        '''
     else:                
         if category_name == 'category_electronics':
             electronics = Electronics.objects.all()
@@ -139,6 +164,7 @@ def product_detail(request, category_name, customer_id):
                 item.pspecs = file_contents
             context = {
             'products': electronics_prod,
+            'customer_id': customer_id,
             }
             return render(request, 'product_detail.html', context=context)
         
@@ -153,6 +179,7 @@ def product_detail(request, category_name, customer_id):
                 item.pspecs = file_contents
             context = {
             'products': garments_prod,
+            'customer_id': customer_id,
             }
             return render(request, 'product_detail.html', context=context)
         
@@ -167,17 +194,45 @@ def product_detail(request, category_name, customer_id):
                 item.pspecs = file_contents
             context = {
             'products': groceries_prod,
+            'customer_id': customer_id,
             }
             return render(request, 'product_detail.html', context=context)
 
 def order_confirmation(request):
     return render(request, 'order_confirmation.html')
-
+    
 def shopping_history(request):
     return render(request, 'shopping_history.html')
 
 def checkout(request):
     return render(request, 'checkout.html')
 
-def cart(request):
-    return render(request, 'cart.html')
+def cart(request, customer_id):
+    customer_cart_ids = []
+    customer_carts = []
+    product_ids = []
+    products = []
+
+    customer_object = Customers.objects.get(custid=customer_id)
+    shopping_carts = Shoppingcarts.objects.all()
+    for shopping_cart in shopping_carts:
+        if shopping_cart.custid == customer_object:
+            customer_carts.append(shopping_cart)
+
+    for customer_cart in customer_carts:
+        customer_cart_ids.append(customer_cart.cartid)
+        customer_cart_container =  Cartcontainers.objects.get(cartid=customer_cart)
+        product_id = customer_cart_container.prodid.prodid
+        if product_id not in product_ids:
+            product_ids.append(product_id)
+            print(product_id)
+    
+    for id in product_ids:
+        product = Products.objects.get(prodid=id)
+        product.pimage = product.pimage.decode('utf-8')
+        products.append(product)
+
+    context = {'products': products}
+    return render(request, 'cart.html', context)
+
+   
