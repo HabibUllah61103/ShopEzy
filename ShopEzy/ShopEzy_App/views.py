@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Electronics, Garments, Groceries, Products
 from django.contrib.auth import authenticate, login
 from .forms import SigninForm, SignupForm
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 # Create your views here.
 
 def index(request):
@@ -50,6 +51,7 @@ def customer_signup(request):
     }
     return render(request, 'customer_signup.html', context=context)
 
+@csrf_protect
 def customer_signin(request):
     if request.method == 'POST':
         form = SigninForm(request.POST)
@@ -61,6 +63,7 @@ def customer_signin(request):
                 login(request, user)
                 return redirect('product_view')           
             else:
+                form.add_error(None, 'Invalid email or password')
                 return render(request, 'customer_signin.html', {'form': form})
     else:
         form = SigninForm()
@@ -106,6 +109,7 @@ def product_view(request):
     for item in groceries_prod:
         item.pimage = item.pimage.decode('utf-8')
 
+
     context = {
         'electronics': electronics_prod,
         'garments': garments_prod,
@@ -123,6 +127,8 @@ def product_detail(request, category_name):
             with open(path, 'r') as file:
                 file_contents = file.read()
             item.pspecs = file_contents
+            item.pimage = item.pimage.decode('utf-8')
+        
         context = {
         'products': electronics_prod,
         }
@@ -137,6 +143,8 @@ def product_detail(request, category_name):
             with open(path, 'r') as file:
                 file_contents = file.read()
             item.pspecs = file_contents
+            item.pimage = item.pimage.decode('utf-8')
+
         context = {
         'products': garments_prod,
         }
@@ -151,6 +159,8 @@ def product_detail(request, category_name):
             with open(path, 'r') as file:
                 file_contents = file.read()
             item.pspecs = file_contents
+            item.pimage = item.pimage.decode('utf-8')
+
         context = {
         'products': groceries_prod,
         }
