@@ -239,9 +239,12 @@ def checkout(request):
 
 def cart(request, customer_id):
     if request.method == 'POST':
+        custom_method = request.POST.get('custom_method')
         product_id = request.POST.get('prodid')
         print(product_id)
-        return redirect('cart', customer_id=customer_id)
+        if custom_method == 'POST_CHECKOUT':
+            print('remove')
+
     else:
         customer_cart_ids = []
         customer_carts = []
@@ -262,12 +265,15 @@ def cart(request, customer_id):
                 product_ids.append(product_id)
                 # print(product_id)
         
+        cart_price = 0
         for id in product_ids:
             product = Products.objects.get(prodid=id)
+            cart_price += product.pprice
             # product.pimage = product.pimage.decode('utf-8')
             products.append(product)
-
-        context = {'products': products}
+        
+        customer = Customers.objects.get(custid=customer_id)
+        context = {'products': products, 'customer': customer, 'cart_price': cart_price}
         return render(request, 'cart.html', context)
 
    
