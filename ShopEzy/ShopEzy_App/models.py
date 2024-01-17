@@ -343,7 +343,7 @@ class Shoppingcarts(models.Model):
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'shoppingcarts'
 
 
