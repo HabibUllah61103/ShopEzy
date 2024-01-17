@@ -240,6 +240,9 @@ def checkout(request):
 def cart(request, customer_id):
     if request.method == 'POST':
         custom_method = request.POST.get('custom_method')
+        if custom_method == 'POST_RATING':
+            print(custom_method )
+            return redirect('product_view.html', customer_id=customer_id)
         product_id = request.POST.get('prodid')
         print(product_id)
         cart_objects = []
@@ -253,7 +256,6 @@ def cart(request, customer_id):
             if cart_object.custid.custid == customer_id:              
                 customer_carts.append(cart_object)
         for customer_cart in customer_carts:                    
-            
             s = Shoppingcarts.objects.get(cartid=customer_cart.cartid)
             s.delete()
             print(s)
@@ -292,7 +294,7 @@ def cart(request, customer_id):
         cart_price = 0
         for id in product_ids:
             product = Products.objects.get(prodid=id)
-            product.pimage = product.pimage.decode('utf-8')
+            # product.pimage = product.pimage.decode('utf-8')
             products.append(product)
         
         customer = Customers.objects.get(custid=customer_id)
