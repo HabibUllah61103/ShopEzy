@@ -31,3 +31,5 @@ class SignupForm(forms.Form):
         customer = Customers.objects.create(cemail=self.cleaned_data['cemail'], cpassword=self.cleaned_data['cpassword'], cname=self.cleaned_data['cname'])
         return customer
     
+class AddtoCart(forms.Form):
+    prodid = forms.IntegerField(widget=forms.HiddenInput())
