@@ -100,7 +100,7 @@ class Cartcontainers(models.Model):
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'cartcontainers'
         unique_together = (('cartid', 'prodid'),)
 
@@ -299,7 +299,7 @@ class Products(models.Model):
     persons_rated = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'products'
 
 
@@ -343,7 +343,7 @@ class Shoppingcarts(models.Model):
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'shoppingcarts'
 
 
