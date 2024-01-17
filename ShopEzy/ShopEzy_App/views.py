@@ -242,7 +242,7 @@ def cart(request, customer_id):
         custom_method = request.POST.get('custom_method')
         if custom_method == 'POST_RATING':
             print(custom_method )
-            return redirect('product_view.html', customer_id=customer_id)
+            return redirect('customer_profile.html', customer_id=customer_id)
         product_id = request.POST.get('prodid')
         print(product_id)
         cart_objects = []
