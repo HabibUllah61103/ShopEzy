@@ -208,31 +208,53 @@ def checkout(request):
     return render(request, 'checkout.html')
 
 def cart(request, customer_id):
-    customer_cart_ids = []
-    customer_carts = []
-    product_ids = []
-    products = []
+    if request.method == 'POST':
+        product_id = request.POST.get('prodid')
+        cart_objects = []
+        cart_container_objects = []
+        customer_carts = []
+        
+        cart_container_objects = Cartcontainers.objects.all()
+        for cart_container_object in cart_container_objects:
+            if cart_container_object.prodid.prodid == product_id:
+                cart_objects.append(cart_container_object.cartid)
+        
+        for cart_object in cart_objects:
+            if cart_object.custid.custid == customer_id:
+                customer_carts.append(cart_object)
 
-    customer_object = Customers.objects.get(custid=customer_id)
-    shopping_carts = Shoppingcarts.objects.all()
-    for shopping_cart in shopping_carts:
-        if shopping_cart.custid == customer_object:
-            customer_carts.append(shopping_cart)
+        for customer_cart in customer_carts:
+            Shoppingcarts.objects.filter(cartid=customer_cart.cartid).delete()
+            Cartcontainers.objects.filter(cartid=customer_cart).delete()
 
-    for customer_cart in customer_carts:
-        customer_cart_ids.append(customer_cart.cartid)
-        customer_cart_container =  Cartcontainers.objects.get(cartid=customer_cart)
-        product_id = customer_cart_container.prodid.prodid
-        if product_id not in product_ids:
-            product_ids.append(product_id)
-            print(product_id)
+        return redirect('cart', customer_id=customer_id)
+        
+    else:
+        customer_cart_ids = []
+        customer_carts = []
+        product_ids = []
+        products = []
+
+        customer_object = Customers.objects.get(custid=customer_id)
+        shopping_carts = Shoppingcarts.objects.all()
+        for shopping_cart in shopping_carts:
+            if shopping_cart.custid == customer_object:
+                customer_carts.append(shopping_cart)
+
+        for customer_cart in customer_carts:
+            customer_cart_ids.append(customer_cart.cartid)
+            customer_cart_container =  Cartcontainers.objects.get(cartid=customer_cart)
+            product_id = customer_cart_container.prodid.prodid
+            if product_id not in product_ids:
+                product_ids.append(product_id)
+                print(product_id)
+        
+        for id in product_ids:
+            product = Products.objects.get(prodid=id)
+            product.pimage = product.pimage.decode('utf-8')
+            products.append(product)
+
+        context = {'products': products}
+        return render(request, 'cart.html', context)
+
     
-    for id in product_ids:
-        product = Products.objects.get(prodid=id)
-        product.pimage = product.pimage.decode('utf-8')
-        products.append(product)
-
-    context = {'products': products}
-    return render(request, 'cart.html', context)
-
-   
