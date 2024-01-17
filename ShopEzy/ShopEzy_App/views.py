@@ -70,7 +70,12 @@ def customer_signin(request):
         form = SigninForm()
     return render(request, 'customer_signin.html', {'form': form})
 
-def customer_profile(request):
+def customer_profile(request, customer_id):
+    if request.method == 'POST':
+        custom_method = request.GET.get('custom_method')
+        if custom_method == 'POST_RATING':
+            print(custom_method)
+            customer = Customers.objects.get(custid=customer_id)
     return render(request, 'customer_profile.html')
 
 def product_view(request, customer_id):
@@ -221,13 +226,6 @@ def product_detail(request, category_name, customer_id):
             }
             return render(request, 'product_detail.html', context=context)
 
-    # elif request.method == 'POST_RATING':
-    #     print(request.method)
-    #     product_id = request.method.get('prodid')
-    #     print(product_id)
-    #     # product_object.save()
-    #     return redirect('product_detail', category_name=category_name, customer_id=customer_id)
-
 def order_confirmation(request):
     return render(request, 'order_confirmation.html')
     
@@ -240,9 +238,26 @@ def checkout(request):
 def cart(request, customer_id):
     if request.method == 'POST':
         custom_method = request.POST.get('custom_method')
-        if custom_method == 'POST_RATING':
-            print(custom_method )
-            return redirect('customer_profile.html', customer_id=customer_id)
+        products = request.POST.get('products')
+        if custom_method == 'POST_CHECKOUT':
+            customer_shopping_carts = []
+            cart_containers = []
+            product_ids = []
+            shopping_carts = Shoppingcarts.objects.all()
+            for shopping_cart in shopping_carts:
+                # print(shopping_cart)
+                if shopping_cart.custid.custid == customer_id:
+                    # print(shopping_cart.custid.custid)
+                    customer_shopping_carts.append(shopping_cart)
+
+            for customer_shopping_cart in customer_shopping_carts:
+                cart_containers.append(Cartcontainers.objects.get(cartid=customer_shopping_cart))
+            for cart_container in cart_containers:
+                if cart_container.prodid.prodid not in product_ids:
+                    product_ids.append(cart_container.prodid.prodid)
+            print(product_ids)
+            return redirect('customer_profile', customer_id=customer_id)
+            
         product_id = request.POST.get('prodid')
         print(product_id)
         cart_objects = []
@@ -265,7 +280,6 @@ def cart(request, customer_id):
             print(c)
             '''
         return redirect('cart', customer_id=customer_id)
-        
     else:
         customer_cart_ids = []
         customer_carts = []
@@ -294,6 +308,7 @@ def cart(request, customer_id):
         cart_price = 0
         for id in product_ids:
             product = Products.objects.get(prodid=id)
+            cart_price += product.pprice
             # product.pimage = product.pimage.decode('utf-8')
             products.append(product)
         
