@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Electronics, Garments, Groceries, Products, Shoppingcarts, Customers, Cartcontainers
+from .models import Electronics, Garments, Groceries, Products, Shoppingcarts, Customers, Cartcontainers, Orders
 from django.contrib.auth import authenticate, login
 from .forms import SigninForm, SignupForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
@@ -74,6 +74,17 @@ def customer_profile(request):
     return render(request, 'customer_profile.html')
 
 def product_view(request, customer_id):
+    if request.method == 'POST':
+        current_customer = Customers.objects.get(custid=customer_id)
+        # orders = Orders.objects.get(custid=current_customer)
+        # products = Products.objects.get(prodid=orders.prodid.prodid)
+        print(customer_id)
+        # context = {
+        #     'products': products,
+        #     'customer': current_customer,
+        # }
+        return render(request, 'customer_profile.html')
+    
     electronics = Electronics.objects.all()
     garments = Garments.objects.all()
     groceries = Groceries.objects.all()
@@ -228,6 +239,7 @@ def checkout(request):
 
 def cart(request, customer_id):
     if request.method == 'POST':
+        custom_method = request.POST.get('custom_method')
         product_id = request.POST.get('prodid')
         print(product_id)
         cart_objects = []
@@ -277,12 +289,14 @@ def cart(request, customer_id):
                 product_ids.append(product_id)
                 print(product_id)
         
+        cart_price = 0
         for id in product_ids:
             product = Products.objects.get(prodid=id)
             product.pimage = product.pimage.decode('utf-8')
             products.append(product)
-
-        context = {'products': products}
+        
+        customer = Customers.objects.get(custid=customer_id)
+        context = {'products': products, 'customer': customer, 'cart_price': cart_price}
         return render(request, 'cart.html', context)
         
     

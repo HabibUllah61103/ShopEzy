@@ -161,7 +161,7 @@
                                 <h5 class="card-title mb-3">Guest checkout</h5>
                                 <div class="row">
                                     <div class="col-6 mb-3">
-                                        <p class="mb-0">First name</p>
+                                        <p class="mb-0">{{ customer.cname }}</p>
                                         <div class="form-outline">
                                             <input type="text" id="typeText" placeholder="Type here" class="form-control" />
                                         </div>
@@ -182,7 +182,7 @@
                                     </div>
     
                                     <div class="col-6 mb-3">
-                                        <p class="mb-0">Email</p>
+                                        <p class="mb-0">{{ customer.cemail }}</p>
                                         <div class="form-outline">
                                             <input type="email" id="typeEmail" placeholder="example@gmail.com"
                                                 class="form-control" />
@@ -322,7 +322,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <p class="mb-2">Total price:</p>
-                                <p class="mb-2">$329.00</p>
+                                <p class="mb-2">{{ cart_price }}</p>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <p class="mb-2">Discount:</p>
