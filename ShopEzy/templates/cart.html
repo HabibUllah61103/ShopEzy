@@ -294,7 +294,13 @@
                                 </div>
     
                                 <div class="float-end">
-
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-success shadow-0 border">
+                                            <input type="hidden" name="custom_method" value="POST_CHECKOUT">
+                                            <input type="hidden" name="products" value='{{ products }}'>
+                                            Continue</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
