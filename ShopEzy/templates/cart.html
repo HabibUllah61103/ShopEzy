@@ -294,12 +294,7 @@
                                 </div>
     
                                 <div class="float-end">
-                                    <form method="POST" action="{% url 'product_view' customer_id=customer.customer_id  %}?custom_method=POST_CHECKOUT">
-                                        {% csrf_token %}
-                                        <button class="btn btn-success shadow-0 border">
-                                            <input type="hidden" name="products" value='{{ product }}'>
-                                            Continue</button>
-                                    </form>
+
                                 </div>
                             </div>
                         </div>
