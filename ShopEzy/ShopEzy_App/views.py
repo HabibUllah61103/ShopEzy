@@ -283,7 +283,6 @@ def cart(request, customer_id):
             print(c)
             '''
         return redirect('cart', customer_id=customer_id)
-        
     else:
         customer_cart_ids = []
         customer_carts = []
