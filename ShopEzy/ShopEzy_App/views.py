@@ -3,6 +3,8 @@ from .models import Electronics, Garments, Groceries, Products, Shoppingcarts, C
 from django.contrib.auth import authenticate, login
 from .forms import SigninForm, SignupForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.db import connection
+
 # Create your views here.
 
 def index(request):
@@ -71,12 +73,25 @@ def customer_signin(request):
     return render(request, 'customer_signin.html', {'form': form})
 
 def customer_profile(request, customer_id):
-    if request.method == 'POST':
-        custom_method = request.GET.get('custom_method')
-        if custom_method == 'POST_RATING':
-            print(custom_method)
-            customer = Customers.objects.get(custid=customer_id)
-    return render(request, 'customer_profile.html')
+    customer = Customers.objects.get(custid=customer_id)
+    orders = Orders.objects.all()
+    customer_products = []
+    customer_orders = []
+    for order in orders:
+        if order.custid.custid == customer_id:
+            customer_products.append(order.prodid)
+            customer_orders.append(order)
+    print(customer)
+    print(customer_orders)
+    
+    context = {'customer': customer,
+               'customers_products': customer_products,
+               'customer_orders': customer_orders,
+    }
+
+    return render(request, 'customer_profile.html', context)
+
+    
 
 def product_view(request, customer_id):
     if request.method == 'POST':
@@ -139,16 +154,24 @@ def product_detail(request, category_name, customer_id):
     if request.method == 'POST':
         custom_method = request.GET.get('custom_method')
         if custom_method == 'POST_RATING':
+            
             prodid = request.POST.get('prodid')
             rating = request.POST.get('rating')
-            print(prodid, rating)
-            product_object = Products.objects.get(prodid=prodid)
-            old_rating = product_object.rating
-            old_person = product_object.persons_rated
-            product_object.rating = (old_rating * old_person + int(rating)) / (old_person + 1)
-            product_object.persons_rated = old_person + 1
-            product_object.save()
+
+            # Construct the raw SQL query
+            sql_query = """
+                UPDATE products
+                SET rating = (rating * persons_rated + %s) / (persons_rated + 1),
+                    persons_rated = persons_rated + 1
+                WHERE prodid = %s
+            """
+
+            # Execute the raw SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query, [rating, prodid])
+
             return redirect('product_detail', category_name=category_name, customer_id=customer_id)
+
         else:
             product_id = request.POST.get('prodid')
             product_object = Products.objects.get(prodid=product_id)        
@@ -259,6 +282,11 @@ def cart(request, customer_id):
                 if cart_container.prodid.prodid not in product_ids:
                     product_ids.append(cart_container.prodid.prodid)
             print(product_ids)
+
+            customer_object = Customers.objects.get(custid=customer_id)
+            for id in product_ids:
+                product_object = Products.objects.get(prodid=id)
+                Orders.objects.create(custid=customer_object, prodid=product_object, orderquantity=1)
             return redirect('customer_profile', customer_id=customer_id)
             
         product_id = request.POST.get('prodid')
@@ -318,3 +346,5 @@ def cart(request, customer_id):
         customer = Customers.objects.get(custid=customer_id)
         context = {'products': products, 'customer': customer, 'cart_price': cart_price}
         return render(request, 'cart.html', context)
+        
+    

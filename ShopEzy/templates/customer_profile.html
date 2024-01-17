@@ -128,9 +128,9 @@
                                         class="rounded-circle" style="height: 60px; width: 60px;" />
                                 </div>
                                 <div class="pt-2">
-                                    <h6 class="pt-2">Mr. Jackson Mike</h6>
+                                    <h6 class="pt-2">{{ customer.cname }}</h6>
                                     <p>
-                                        Email: myusername@gmail.com, Phone: +1234567890988
+                                        {{ customer.cemail }}
                                         <a href="#" class="px-2"><i class="fa fa-pen"></i></a>
                                     </p>
                                 </div>
@@ -159,11 +159,13 @@
                             <hr class="my-4" />
 
                             <h5 class="mb-3">Your orders</h5>
+
                             <div class="card border border-primary mb-4 shadow-0">
                                 <div class="card-body pb-0">
                                     <header class="d-lg-flex">
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-0">Order ID: 8924 <i class="dot"></i>
+                                            {% for order in customer_orders %}
+                                            <h6 class="mb-0"> {{ order.orderid }} <i class="dot"></i>
                                                 <span class="text-success"> Shipped</span>
                                             </h6>
                                             <span class="text-muted">Date: 16 December 2022</span>
@@ -178,9 +180,9 @@
                                         <div class="col-lg-4">
                                             <p class="mb-0 text-muted">Contact</p>
                                             <p class="m-0">
-                                                Mike Johnatan <br />
+                                                {{customer.cname}} <br />
                                                 Phone: 371-295-9131 <br />
-                                                Email: info@mywebsite.com
+                                                {{customer.cemail}}
                                             </p>
                                         </div>
                                         <div class="col-lg-4 border-start">
@@ -199,20 +201,22 @@
                                             </p>
                                         </div>
                                     </div>
+
                                     <hr />
                                     <ul class="row list-unstyled">
                                         <li class="col-xl-4 col-lg-6">
                                             <div class="d-flex mb-3 mb-xl-0">
                                                 <div class="me-3">
                                                     <img width="72" height="72"
-                                                        src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp"
+                                                        src="{{ order.prodid.pimage.url }}"
                                                         class="img-sm rounded border" />
                                                 </div>
                                                 <div class="">
-                                                    <p class="mb-0">T-shirts with multiple colors</p>
-                                                    <strong> 2x = $25.98 </strong>
+                                                    <p class="mb-0">{{ order.prodid.pname }}</p>
+                                                    <strong> {{ order.prodid.pprice }} </strong>
                                                 </div>
                                             </div>
+                                            {% endfor %}
                                         </li>
                                         <li class="col-xl-4 col-lg-6">
                                             <div class="d-flex mb-3 mb-xl-0">
@@ -221,6 +225,7 @@
                                                         src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp"
                                                         class="img-sm rounded border" />
                                                 </div>
+                                            
                                                 <div class="">
                                                     <p class="mb-0">Gaming Headset 32db Black</p>
                                                     <strong> 2x = $339.90 </strong>
@@ -243,6 +248,7 @@
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="card border border-primary shadow-0">
                                 <div class="card-body pb-0">
                                     <header class="d-lg-flex">
