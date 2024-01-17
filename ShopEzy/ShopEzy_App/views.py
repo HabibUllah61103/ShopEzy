@@ -18,12 +18,12 @@ def index(request):
     garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
     groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    for item in electronics_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in garments_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in groceries_prod:
-        item.pimage = item.pimage.decode('utf-8')
+    # for item in electronics_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in garments_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in groceries_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -103,12 +103,12 @@ def product_view(request, customer_id):
     garments_prod = [Products.objects.get(prodid=str(id)) for id in sorted_garment_prod_id.keys()]
     groceries_prod = [Products.objects.get(prodid=str(id)) for id in sorted_grocery_prod_id.keys()]
 
-    for item in electronics_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in garments_prod:
-        item.pimage = item.pimage.decode('utf-8')
-    for item in groceries_prod:
-        item.pimage = item.pimage.decode('utf-8')
+    # for item in electronics_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in garments_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
+    # for item in groceries_prod:
+    #     item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -120,14 +120,23 @@ def product_view(request, customer_id):
     return render(request, 'product_view.html', context)
 
 def product_detail(request, category_name, customer_id):
-
     if request.method == 'POST':
-        product_id = request.POST.get('prodid')
-        product_object = Products.objects.get(prodid=product_id)        
-        customer_object = Customers.objects.get(custid=customer_id)
-        shoppingcart_object = Shoppingcarts.objects.create(custid=customer_object)
-        cartcontainer_object = Cartcontainers.objects.create(cartid=shoppingcart_object, prodid=product_object)
-        return redirect('product_detail', category_name=category_name, customer_id=customer_id)
+        custom_method = request.GET.get('custom_method')
+        if custom_method == 'POST_RATING':
+            prodid = request.POST.get('prodid')
+            rating = request.POST.get('rating')
+            print(prodid, rating)
+            product_object = Products.objects.get(prodid=prodid)
+            product_object.rating = rating
+            product_object.save()
+            return redirect('product_detail', category_name=category_name, customer_id=customer_id)
+        else:
+            product_id = request.POST.get('prodid')
+            product_object = Products.objects.get(prodid=product_id)        
+            customer_object = Customers.objects.get(custid=customer_id)
+            shoppingcart_object = Shoppingcarts.objects.create(custid=customer_object)
+            cartcontainer_object = Cartcontainers.objects.create(cartid=shoppingcart_object, prodid=product_object)
+            return redirect('product_detail', category_name=category_name, customer_id=customer_id)
 
         '''
         product_id = request.POST.get('prodid')
@@ -152,7 +161,7 @@ def product_detail(request, category_name, customer_id):
 
         return redirect('product_detail', category_name=category_name, customer_id=customer_id)
         '''
-    else:                
+    elif request.method == 'GET':                
         if category_name == 'category_electronics':
             electronics = Electronics.objects.all()
             electronic_ids = [electronic.prodid.prodid for electronic in electronics]
@@ -165,6 +174,7 @@ def product_detail(request, category_name, customer_id):
             context = {
             'products': electronics_prod,
             'customer_id': customer_id,
+            'category_name': 'category_electronics',
             }
             return render(request, 'product_detail.html', context=context)
         
@@ -180,6 +190,7 @@ def product_detail(request, category_name, customer_id):
             context = {
             'products': garments_prod,
             'customer_id': customer_id,
+            'category_name': 'category_garments',
             }
             return render(request, 'product_detail.html', context=context)
         
@@ -195,8 +206,16 @@ def product_detail(request, category_name, customer_id):
             context = {
             'products': groceries_prod,
             'customer_id': customer_id,
+            'category_name': 'category_groceries',
             }
             return render(request, 'product_detail.html', context=context)
+
+    # elif request.method == 'POST_RATING':
+    #     print(request.method)
+    #     product_id = request.method.get('prodid')
+    #     print(product_id)
+    #     # product_object.save()
+    #     return redirect('product_detail', category_name=category_name, customer_id=customer_id)
 
 def order_confirmation(request):
     return render(request, 'order_confirmation.html')
@@ -210,23 +229,27 @@ def checkout(request):
 def cart(request, customer_id):
     if request.method == 'POST':
         product_id = request.POST.get('prodid')
+        print(product_id)
         cart_objects = []
         cart_container_objects = []
-        customer_carts = []
-        
+        customer_carts = []        
         cart_container_objects = Cartcontainers.objects.all()
         for cart_container_object in cart_container_objects:
-            if cart_container_object.prodid.prodid == product_id:
-                cart_objects.append(cart_container_object.cartid)
-        
+            if cart_container_object.prodid.prodid == int(product_id):                
+                cart_objects.append(cart_container_object.cartid)        
         for cart_object in cart_objects:
-            if cart_object.custid.custid == customer_id:
+            if cart_object.custid.custid == customer_id:              
                 customer_carts.append(cart_object)
-
-        for customer_cart in customer_carts:
-            Shoppingcarts.objects.filter(cartid=customer_cart.cartid).delete()
-            Cartcontainers.objects.filter(cartid=customer_cart).delete()
-
+        for customer_cart in customer_carts:                    
+            
+            s = Shoppingcarts.objects.get(cartid=customer_cart.cartid)
+            s.delete()
+            print(s)
+            '''
+            c = Cartcontainers.objects.get(cartid=customer_cart)
+            c.delete
+            print(c)
+            '''
         return redirect('cart', customer_id=customer_id)
         
     else:
@@ -235,6 +258,11 @@ def cart(request, customer_id):
         product_ids = []
         products = []
 
+        customer_object = Customers.objects.get(custid=customer_id)
+        shopping_carts = Shoppingcarts.objects.all()
+        for shopping_cart in shopping_carts:
+            if shopping_cart.custid == customer_object:
+                customer_carts.append(shopping_cart)
         customer_object = Customers.objects.get(custid=customer_id)
         shopping_carts = Shoppingcarts.objects.all()
         for shopping_cart in shopping_carts:
@@ -256,5 +284,5 @@ def cart(request, customer_id):
 
         context = {'products': products}
         return render(request, 'cart.html', context)
-
+        
     

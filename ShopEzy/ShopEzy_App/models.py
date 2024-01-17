@@ -93,14 +93,14 @@ class AuthUserUserPermissions(models.Model):
 
 
 class Cartcontainers(models.Model):
-    cartid = models.OneToOneField('Shoppingcarts', models.DO_NOTHING, db_column='CartID', primary_key=True)  # Field name made lowercase. The composite primary key (CartID, ProdID) found, that is not supported. The first column is selected.
-    prodid = models.ForeignKey('Products', models.DO_NOTHING, db_column='ProdID')  # Field name made lowercase.
+    cartid = models.OneToOneField('Shoppingcarts', on_delete=models.CASCADE, db_column='CartID', primary_key=True)  # Field name made lowercase. The composite primary key (CartID, ProdID) found, that is not supported. The first column is selected.
+    prodid = models.ForeignKey('Products', on_delete=models.CASCADE, db_column='ProdID')  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='CreatedAt', blank=True, null=True)  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='UpdatedAt', blank=True, null=True)  # Field name made lowercase.
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cartcontainers'
         unique_together = (('cartid', 'prodid'),)
 
@@ -337,13 +337,13 @@ class Productsupply(models.Model):
 
 class Shoppingcarts(models.Model):
     cartid = models.AutoField(db_column='CartID', primary_key=True)  # Field name made lowercase.
-    custid = models.ForeignKey(Customers, models.DO_NOTHING, db_column='CustID', blank=True, null=True)  # Field name made lowercase.
+    custid = models.ForeignKey(Customers, on_delete=models.CASCADE, db_column='CustID', blank=True, null=True)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='CreatedAt', blank=True, null=True)  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='UpdatedAt', blank=True, null=True)  # Field name made lowercase.
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'shoppingcarts'
 
 
