@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Electronics, Garments, Groceries, Products, Shoppingcarts, Customers, Cartcontainers, Orders
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import SigninForm, SignupForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.db import connection
@@ -20,12 +20,12 @@ def index(request):
     garments_prod =[Products.objects.get(prodid=str(id)) for id in garment_ids]
     groceries_prod =[Products.objects.get(prodid=str(id)) for id in grocery_ids]
 
-    # for item in electronics_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in garments_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in groceries_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
+    for item in electronics_prod:
+         item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -81,6 +81,9 @@ def customer_profile(request, customer_id):
         if order.custid.custid == customer_id:
             customer_products.append(order.prodid)
             customer_orders.append(order)
+
+    for customer_product in customer_products:
+        customer_product.pimage = customer_product.pimage.decode('utf-8')
     print(customer)
     print(customer_orders)
     
@@ -134,12 +137,12 @@ def product_view(request, customer_id):
     garments_prod = [Products.objects.get(prodid=str(id)) for id in sorted_garment_prod_id.keys()]
     groceries_prod = [Products.objects.get(prodid=str(id)) for id in sorted_grocery_prod_id.keys()]
 
-    # for item in electronics_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in garments_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
-    # for item in groceries_prod:
-    #     item.pimage = item.pimage.decode('utf-8')
+    for item in electronics_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in garments_prod:
+        item.pimage = item.pimage.decode('utf-8')
+    for item in groceries_prod:
+        item.pimage = item.pimage.decode('utf-8')
 
 
     context = {
@@ -213,6 +216,7 @@ def product_detail(request, category_name, customer_id):
                 with open(path, 'r') as file:
                     file_contents = file.read()
                 item.pspecs = file_contents
+                item.pimage = item.pimage.decode('utf-8')
             context = {
             'products': electronics_prod,
             'customer_id': customer_id,
@@ -229,6 +233,7 @@ def product_detail(request, category_name, customer_id):
                 with open(path, 'r') as file:
                     file_contents = file.read()
                 item.pspecs = file_contents
+                item.pimage = item.pimage.decode('utf-8')
             context = {
             'products': garments_prod,
             'customer_id': customer_id,
@@ -245,6 +250,7 @@ def product_detail(request, category_name, customer_id):
                 with open(path, 'r') as file:
                     file_contents = file.read()
                 item.pspecs = file_contents
+                item.pimage = item.pimage.decode('utf-8')
             context = {
             'products': groceries_prod,
             'customer_id': customer_id,
@@ -258,8 +264,10 @@ def order_confirmation(request):
 def shopping_history(request):
     return render(request, 'shopping_history.html')
 
-def checkout(request):
-    return render(request, 'checkout.html')
+def customer_signout(request, customer_id):
+    user = Customers.objects.get(custid=customer_id)
+    logout(request, user)
+    return redirect('customer_signout.html')
 
 def cart(request, customer_id):
     if request.method == 'POST':
@@ -287,6 +295,12 @@ def cart(request, customer_id):
             for id in product_ids:
                 product_object = Products.objects.get(prodid=id)
                 Orders.objects.create(custid=customer_object, prodid=product_object, orderquantity=1)
+
+            for shopping_cart in shopping_carts:
+                if shopping_cart.custid.custid == customer_id:
+                    s = Shoppingcarts.objects.get(cartid=shopping_cart.cartid)
+                    s.delete()
+            
             return redirect('customer_profile', customer_id=customer_id)
             
         product_id = request.POST.get('prodid')
@@ -340,7 +354,7 @@ def cart(request, customer_id):
         for id in product_ids:
             product = Products.objects.get(prodid=id)
             cart_price += product.pprice
-            # product.pimage = product.pimage.decode('utf-8')
+            product.pimage = product.pimage.decode('utf-8')
             products.append(product)
         
         customer = Customers.objects.get(custid=customer_id)
