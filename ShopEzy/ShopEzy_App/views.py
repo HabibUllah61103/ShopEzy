@@ -106,7 +106,9 @@ def product_view(request, customer_id):
         #     'products': products,
         #     'customer': current_customer,
         # }
-        return render(request, 'customer_profile.html')
+        
+
+        return render(request, 'customer_profile.html', {'customer': current_customer})
     
     electronics = Electronics.objects.all()
     garments = Garments.objects.all()
@@ -269,7 +271,7 @@ def customer_signout(request, customer_id):
     logout(request, user)
     return redirect('customer_signout.html')
 
-def cart(request, customer_id):
+def cart(request, customer_id, category_name):
     if request.method == 'POST':
         custom_method = request.POST.get('custom_method')
         products = request.POST.get('products')
@@ -324,7 +326,7 @@ def cart(request, customer_id):
             c.delete
             print(c)
             '''
-        return redirect('cart', customer_id=customer_id)
+        return redirect('cart', customer_id=customer_id, category_name=category_name)
     else:
         customer_cart_ids = []
         customer_carts = []
@@ -358,7 +360,7 @@ def cart(request, customer_id):
             products.append(product)
         
         customer = Customers.objects.get(custid=customer_id)
-        context = {'products': products, 'customer': customer, 'cart_price': cart_price}
+        context = {'products': products, 'customer': customer, 'cart_price': cart_price, 'category_name': category_name, 'customer_id': customer_id}
         return render(request, 'cart.html', context)
         
     
