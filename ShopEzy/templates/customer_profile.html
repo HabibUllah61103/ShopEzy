@@ -30,6 +30,14 @@
                         </a>
                     </div>
                     <!-- Left elements -->
+                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                        <div class="d-flex float-end" style="padding-left: 3%;">
+                            <a href="{% url 'product_view' customer_id=customer.custid %}"
+                                class="border rounded py-1 px-3 nav-link d-flex align-items-center"> 
+                                <p class="d-none d-md-block mb-0">Back</p>
+                            </a>
+                        </div>
+                </div>
 
                     <!-- Right elements -->
                     <div class="col-lg-5 col-md-12 col-12">
@@ -45,6 +53,7 @@
                     </div>
                     <!-- Right elements -->
                 </div>
+
             </div>
         </div>
         <!-- Jumbotron -->
@@ -52,7 +61,7 @@
         <!-- Heading -->
         <div class="bg-primary mb-4">
             <div class="container py-4">
-                <h3 class="text-white mt-2">Profile Information</h3>
+                <h3 class="text-white mt-2">Product Profile</h3>
             </div>
         </div>
         <!-- Heading -->

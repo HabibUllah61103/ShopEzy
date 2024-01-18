@@ -145,9 +145,10 @@ class Customers(models.Model):
     updatedat = models.DateTimeField(db_column='UpdatedAt', blank=True, null=True)  # Field name made lowercase.
     deletedat = models.DateTimeField(db_column='DeletedAt', blank=True, null=True)  # Field name made lowercase.
     last_login = models.DateTimeField(null=True, blank=True)
+    
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'customers'
 
 
