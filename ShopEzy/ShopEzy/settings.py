@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'ShopEzy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shopezy',  # Your database name
+        'NAME': 'habibullah07$shopezy',  # Your database name
         'USER': 'habibullah07',          # Your PythonAnywhere username
         'PASSWORD': 'Hu_kraken_07',  # <--- You need to set this password yourself in PythonAnywhere Databases tab
         'HOST': 'habibullah07.mysql.pythonanywhere-services.com', # Your database host
