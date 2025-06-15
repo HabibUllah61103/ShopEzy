@@ -78,11 +78,13 @@ WSGI_APPLICATION = 'ShopEzy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'storedb',
-        'USER': 'root',
-        'PASSWORD': 'rootadmin',
-        'HOST': 'localhost',  # Set to the MySQL server host (usually 'localhost')
-        'PORT': '3306',
+        'NAME': 'shopezy',  # Your database name
+        'USER': 'habibullah07',          # Your PythonAnywhere username
+        'PASSWORD': 'Hu_kraken_07',  # <--- You need to set this password yourself in PythonAnywhere Databases tab
+        'HOST': 'habibullah07.mysql.pythonanywhere-services.com', # Your database host
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
 
