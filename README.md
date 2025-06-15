@@ -24,7 +24,7 @@ A comprehensive e-commerce platform built with Django 5.0, featuring a robust pr
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/ShopEzy-WebApp-SE.git
+git clone https://github.com/HabibUllah61103/ShopEzy-WebApp-SE.git
 cd ShopEzy-WebApp-SE
 ```
 
@@ -74,5 +74,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-Your Name - your.email@example.com
-Project Link: https://github.com/yourusername/ShopEzy-WebApp-SE
+Habib Ullah - hu3960990@gmail.com
+Project Link: https://github.com/HabibUllah61103/ShopEzy-WebApp-SE
